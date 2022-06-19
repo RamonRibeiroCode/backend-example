@@ -1,133 +1,133 @@
-import { Router, Request, Response } from "express";
-import { In } from "typeorm";
-import { compare, hash } from "bcrypt";
-import { sign } from "jsonwebtoken";
+import { Router, Request, Response } from 'express'
+import { In } from 'typeorm'
+import { compare, hash } from 'bcrypt'
+import { sign } from 'jsonwebtoken'
 
-import { User } from "@modules/user/entity/User";
-import { Photo } from "@modules/user/entity/Photo";
-import { AppError } from "@shared/errors/AppError";
-import { AppDataSource } from "@shared/infra/typeorm/index";
-import { ensureAuthenticated } from "@shared/infra/http/middlewares/ensureAuthenticated";
-import auth from "@config/auth";
+import { User } from '@modules/user/entity/User'
+import { Photo } from '@modules/user/entity/Photo'
+import { AppError } from '@shared/errors/AppError'
+import { AppDataSource } from '@shared/infra/typeorm/index'
+import { ensureAuthenticated } from '@shared/infra/http/middlewares/ensureAuthenticated'
+import auth from '@config/auth'
 
-interface IGetUserAuthInfoRequest extends Request {
+export interface IGetUserAuthInfoRequest extends Request {
   user: {
     id: string;
   };
 }
 
-const usersRoutes = Router();
+const usersRoutes = Router()
 
-const usersRepository = AppDataSource.getRepository(User);
-const photosRepository = AppDataSource.getRepository(Photo);
+const usersRepository = AppDataSource.getRepository(User)
+const photosRepository = AppDataSource.getRepository(Photo)
 
-usersRoutes.post("/create", async function (req: Request, res: Response) {
-  const { email, firstName, lastName, password, age } = req.body;
+usersRoutes.post('/create', async function (req: Request, res: Response) {
+  const { email, firstName, lastName, password, age } = req.body
 
   const userAlreadyExists = usersRepository.findOneBy({
-    email: email,
-  });
+    email
+  })
 
   if (userAlreadyExists) {
-    throw new AppError("User already exists");
+    throw new AppError('User already exists')
   }
 
-  const passwordHash = await hash(password, 8);
+  const passwordHash = await hash(password, 8)
 
   const newUser = usersRepository.create({
     email,
     firstName,
     lastName,
     password: passwordHash,
-    age,
-  });
+    age
+  })
 
-  await usersRepository.save(newUser);
+  await usersRepository.save(newUser)
 
-  res.status(201).send(newUser);
-});
+  res.status(201).send(newUser)
+})
 
-usersRoutes.get("/list", async function (req: Request, res: Response) {
+usersRoutes.get('/list', async function (req: Request, res: Response) {
   const users = await usersRepository.find({
     relations: {
-      photos: true,
-    },
-  });
+      photos: true
+    }
+  })
 
-  res.send(users);
-});
+  res.send(users)
+})
 
 usersRoutes.get(
-  "/get-by-id",
+  '/get-by-id',
   ensureAuthenticated,
   async function (req: IGetUserAuthInfoRequest, res: Response) {
     const users = await usersRepository.findOneBy({
-      id: parseInt(req.user.id),
-    });
+      id: parseInt(req.user.id)
+    })
 
-    res.send(users);
+    res.send(users)
   }
-);
+)
 
 usersRoutes.delete(
-  "/delete-by-id",
+  '/delete-by-id',
   async function (req: Request, res: Response) {
-    const { id } = req.body;
-    const users = await usersRepository.delete({ id });
+    const { id } = req.body
+    const users = await usersRepository.delete({ id })
 
-    return res.status(204).json(users);
+    return res.status(204).json(users)
   }
-);
+)
 
-usersRoutes.get("/sessions", async function (req: Request, res: Response) {
-  const { email, password } = req.body;
-  const { expires_in_token, secret_token } = auth;
+usersRoutes.get('/sessions', async function (req: Request, res: Response) {
+  const { email, password } = req.body
+  const { expiresInToken, secretToken } = auth
 
   const user = await usersRepository.findOneBy({
-    email: email,
-  });
+    email
+  })
 
   if (!user) {
-    throw new AppError("Email or password incorrect!");
+    throw new AppError('Email or password incorrect!')
   }
 
-  const passwordMatch = await compare(password, user.password);
+  const passwordMatch = await compare(password, user.password)
 
   if (!passwordMatch) {
-    throw new AppError("Email or password incorrect!");
+    throw new AppError('Email or password incorrect!')
   }
 
-  const token = sign({}, secret_token, {
+  const token = sign({}, secretToken, {
     subject: `${user.id}`,
-    expiresIn: expires_in_token,
-  });
+    expiresIn: expiresInToken
+  })
 
   const tokenReturn = {
     token,
     user: {
       email: user.email,
-      name: user.firstName,
-    },
-  };
+      name: user.firstName
+    }
+  }
 
-  res.send(tokenReturn);
-});
+  res.send(tokenReturn)
+})
 
 usersRoutes.post(
-  "/add-photo",
+  '/add-photo',
   ensureAuthenticated,
   async function (req: IGetUserAuthInfoRequest, res: Response) {
-    const userId = parseInt(req.user.id);
-    const requestPhotos: Photo[] = req.body.photos;
+    const userId = parseInt(req.user.id)
+    const requestPhotos: Photo[] = req.body.photos
 
     const user = await usersRepository.findOne({
       where: {
-        id: userId,
+        id: userId
       },
       relations: {
-        photos: true,
-      },
-    });
+        photos: true
+      }
+    })
 
     const photosToAdd = requestPhotos.map((photo) => {
       const photoCreated = photosRepository.create({
@@ -136,54 +136,54 @@ usersRoutes.post(
         filename: photo.filename,
         views: photo.views,
         isPublished: photo.isPublished,
-        user: user,
-      });
+        user
+      })
 
-      photosRepository.save(photoCreated);
+      photosRepository.save(photoCreated)
 
-      return photoCreated;
-    });
+      return photoCreated
+    })
 
     if (user.photos) {
-      user.photos = [...user.photos, ...photosToAdd];
+      user.photos = [...user.photos, ...photosToAdd]
     } else {
-      user.photos = photosToAdd;
+      user.photos = photosToAdd
     }
 
-    usersRepository.save(user);
+    usersRepository.save(user)
 
-    res.send();
+    res.send()
   }
-);
+)
 
 usersRoutes.delete(
-  "/delete-photo",
+  '/delete-photo',
   ensureAuthenticated,
   async function (req: IGetUserAuthInfoRequest, res: Response) {
-    const userId = parseInt(req.user.id);
-    const requestPhotosIdsToRemove: number[] = req.body.photosIdsToRemove;
+    const userId = parseInt(req.user.id)
+    const requestPhotosIdsToRemove: number[] = req.body.photosIdsToRemove
 
     const photosToRemove = await photosRepository.find({
       where: {
-        id: In(requestPhotosIdsToRemove),
+        id: In(requestPhotosIdsToRemove)
       },
       relations: {
-        user: true,
-      },
-    });
+        user: true
+      }
+    })
 
     if (!photosToRemove) {
-      throw new AppError("Photos not found");
+      throw new AppError('Photos not found')
     }
 
     if (photosToRemove.some((photo) => photo.user.id !== userId)) {
-      throw new AppError("You cannot delete another user's photo");
+      throw new AppError('You cannot delete another users photo')
     }
 
-    await photosRepository.remove(photosToRemove);
+    await photosRepository.remove(photosToRemove)
 
-    res.send();
+    res.send()
   }
-);
+)
 
-export { usersRoutes };
+export { usersRoutes }

@@ -1,36 +1,36 @@
-import { NextFunction, Response } from "express";
-import { verify } from "jsonwebtoken";
-import { IGetUserAuthInfoRequest } from "@shared/infra/http/app";
+import { NextFunction, Response } from 'express'
+import { verify } from 'jsonwebtoken'
+import { IGetUserAuthInfoRequest } from '@shared/infra/http/routes/users.routes'
 
-import auth from "../../../../config/auth";
-import { AppError } from "../../../errors/AppError";
+import auth from '../../../../config/auth'
+import { AppError } from '../../../errors/AppError'
 
 interface IPayload {
   sub: string;
 }
 
-export async function ensureAuthenticated(
+export async function ensureAuthenticated (
   request: IGetUserAuthInfoRequest,
   response: Response,
   next: NextFunction
 ) {
-  const authHeader = request.headers.authorization;
+  const authHeader = request.headers.authorization
 
   if (!authHeader) {
-    throw new AppError("Token missing", 401);
+    throw new AppError('Token missing', 401)
   }
 
-  const [, token] = authHeader.split(" ");
+  const [, token] = authHeader.split(' ')
 
   try {
-    const { sub: user_id } = verify(token, auth.secret_token) as IPayload;
+    const { sub: userId } = verify(token, auth.secretToken) as IPayload
 
     request.user = {
-      id: user_id,
-    };
+      id: userId
+    }
 
-    next();
+    next()
   } catch {
-    throw new AppError("Invalid token!", 401);
+    throw new AppError('Invalid token!', 401)
   }
 }

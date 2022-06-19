@@ -4,36 +4,36 @@ import {
   Column,
   OneToMany,
   CreateDateColumn,
-  UpdateDateColumn,
-} from "typeorm";
-import { Photo } from "@modules/user/entity/Photo";
+  UpdateDateColumn
+} from 'typeorm'
+import { Photo } from '@modules/user/entity/Photo'
 
-@Entity({ name: "users" })
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+    id: number
 
   @Column()
-  email: string;
+    email: string
 
-  @Column({ name: "first_name" })
-  firstName: string;
+  @Column({ name: 'first_name' })
+    firstName: string
 
-  @Column({ name: "last_name" })
-  lastName: string;
-
-  @Column()
-  password: string;
+  @Column({ name: 'last_name' })
+    lastName: string
 
   @Column()
-  age: number;
+    password: string
 
-  @OneToMany(() => Photo, (photo) => photo.user, { onDelete: "CASCADE" })
-  photos: Photo[];
+  @Column()
+    age: number
 
-  @CreateDateColumn({ name: "created_at", type: "datetime", nullable: false })
-  createdAt: Date;
+  @OneToMany(() => Photo, (photo) => photo.user, { onDelete: 'CASCADE' })
+    photos: Photo[]
 
-  @UpdateDateColumn({ name: "updated_at", type: "datetime", nullable: false })
-  updatedAt: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'datetime', nullable: false })
+    createdAt: Date
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'datetime', nullable: false })
+    updatedAt: Date
 }
