@@ -1,10 +1,6 @@
-import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { Photo } from "./entity/Photo";
-import { User } from "./entity/User";
-
-import * as dotenv from "dotenv";
-dotenv.config();
+import { Photo } from "@modules/user/entity/Photo";
+import { User } from "@modules/user/entity/User";
 
 export const AppDataSource = new DataSource({
   type: "mysql",

@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-import { User } from "./User";
+import { User } from "@modules/user/entity/User";
 
 @Entity({ name: "photos" })
 export class Photo {
@@ -20,7 +20,7 @@ export class Photo {
   @Column("double")
   views: number;
 
-  @Column()
+  @Column({ name: "is_published" })
   isPublished: boolean;
 
   @ManyToOne(() => User, (user) => user.photos)
