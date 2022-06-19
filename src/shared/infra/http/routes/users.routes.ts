@@ -6,7 +6,7 @@ import { sign } from 'jsonwebtoken'
 import { User } from '@modules/user/entity/User'
 import { Photo } from '@modules/user/entity/Photo'
 import { AppError } from '@shared/errors/AppError'
-import { AppDataSource } from '@shared/infra/typeorm/index'
+import { AppDataSource } from '@shared/infra/typeorm'
 import { ensureAuthenticated } from '@shared/infra/http/middlewares/ensureAuthenticated'
 import auth from '@config/auth'
 
@@ -24,7 +24,7 @@ const photosRepository = AppDataSource.getRepository(Photo)
 usersRoutes.post('/create', async function (req: Request, res: Response) {
   const { email, firstName, lastName, password, age } = req.body
 
-  const userAlreadyExists = usersRepository.findOneBy({
+  const userAlreadyExists = await usersRepository.findOneBy({
     email
   })
 
