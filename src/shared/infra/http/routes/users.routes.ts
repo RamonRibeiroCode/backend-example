@@ -1,189 +1,164 @@
-import { Router, Request, Response } from 'express'
-import { In } from 'typeorm'
-import { compare, hash } from 'bcrypt'
-import { sign } from 'jsonwebtoken'
+import { Router } from 'express'
 
-import { User } from '@modules/user/entity/User'
-import { Photo } from '@modules/user/entity/Photo'
-import { AppError } from '@shared/errors/AppError'
-import { AppDataSource } from '@shared/infra/typeorm'
-import { ensureAuthenticated } from '@shared/infra/http/middlewares/ensureAuthenticated'
-import auth from '@config/auth'
+import { CreateUserController } from '@modules/user/useCases/CreateUserController'
 
-export interface IGetUserAuthInfoRequest extends Request {
-  user: {
-    id: string;
-  };
-}
+// import { In } from 'typeorm'
+// import { compare, hash } from 'bcrypt'
+// import { sign } from 'jsonwebtoken'
+
+// import { User } from '@modules/user/infra/typeorm/entities/User'
+// import { Photo } from '@modules/user/infra/typeorm/entities/Photo'
+// import { AppError } from '@shared/errors/AppError'
+// import { AppDataSource } from '@shared/infra/typeorm'
+// import { ensureAuthenticated } from '@shared/infra/http/middlewares/ensureAuthenticated'
+// import auth from '@config/auth'
 
 const usersRoutes = Router()
 
-const usersRepository = AppDataSource.getRepository(User)
-const photosRepository = AppDataSource.getRepository(Photo)
+// const usersRepository = AppDataSource.getRepository(User)
+// const photosRepository = AppDataSource.getRepository(Photo)
 
-usersRoutes.post('/create', async function (req: Request, res: Response) {
-  const { email, firstName, lastName, password, age } = req.body
+const createUserController = new CreateUserController()
 
-  const userAlreadyExists = await usersRepository.findOneBy({
-    email
-  })
+usersRoutes.post('/create', createUserController.handle)
 
-  if (userAlreadyExists) {
-    throw new AppError('User already exists')
-  }
+// usersRoutes.get('/list', async function (req: Request, res: Response) {
+//   const users = await usersRepository.find({
+//     relations: {
+//       photos: true
+//     }
+//   })
 
-  const passwordHash = await hash(password, 8)
+//   res.send(users)
+// })
 
-  const newUser = usersRepository.create({
-    email,
-    firstName,
-    lastName,
-    password: passwordHash,
-    age
-  })
+// usersRoutes.get(
+//   '/get-by-id',
+//   ensureAuthenticated,
+//   async function (req: IGetUserAuthInfoRequest, res: Response) {
+//     const users = await usersRepository.findOneBy({
+//       id: parseInt(req.user.id)
+//     })
 
-  await usersRepository.save(newUser)
+//     res.send(users)
+//   }
+// )
 
-  res.status(201).send(newUser)
-})
+// usersRoutes.delete(
+//   '/delete-by-id',
+//   async function (req: Request, res: Response) {
+//     const { id } = req.body
+//     const users = await usersRepository.delete({ id })
 
-usersRoutes.get('/list', async function (req: Request, res: Response) {
-  const users = await usersRepository.find({
-    relations: {
-      photos: true
-    }
-  })
+//     return res.status(204).json(users)
+//   }
+// )
 
-  res.send(users)
-})
+// usersRoutes.get('/sessions', async function (req: Request, res: Response) {
+//   const { email, password } = req.body
+//   const { expiresInToken, secretToken } = auth
 
-usersRoutes.get(
-  '/get-by-id',
-  ensureAuthenticated,
-  async function (req: IGetUserAuthInfoRequest, res: Response) {
-    const users = await usersRepository.findOneBy({
-      id: parseInt(req.user.id)
-    })
+//   const user = await usersRepository.findOneBy({
+//     email
+//   })
 
-    res.send(users)
-  }
-)
+//   if (!user) {
+//     throw new AppError('Email or password incorrect!')
+//   }
 
-usersRoutes.delete(
-  '/delete-by-id',
-  async function (req: Request, res: Response) {
-    const { id } = req.body
-    const users = await usersRepository.delete({ id })
+//   const passwordMatch = await compare(password, user.password)
 
-    return res.status(204).json(users)
-  }
-)
+//   if (!passwordMatch) {
+//     throw new AppError('Email or password incorrect!')
+//   }
 
-usersRoutes.get('/sessions', async function (req: Request, res: Response) {
-  const { email, password } = req.body
-  const { expiresInToken, secretToken } = auth
+//   const token = sign({}, secretToken, {
+//     subject: `${user.id}`,
+//     expiresIn: expiresInToken
+//   })
 
-  const user = await usersRepository.findOneBy({
-    email
-  })
+//   const tokenReturn = {
+//     token,
+//     user: {
+//       email: user.email,
+//       name: user.firstName
+//     }
+//   }
 
-  if (!user) {
-    throw new AppError('Email or password incorrect!')
-  }
+//   res.send(tokenReturn)
+// })
 
-  const passwordMatch = await compare(password, user.password)
+// usersRoutes.post(
+//   '/add-photo',
+//   ensureAuthenticated,
+//   async function (req: IGetUserAuthInfoRequest, res: Response) {
+//     const userId = parseInt(req.user.id)
+//     const requestPhotos: Photo[] = req.body.photos
 
-  if (!passwordMatch) {
-    throw new AppError('Email or password incorrect!')
-  }
+//     const user = await usersRepository.findOne({
+//       where: {
+//         id: userId
+//       },
+//       relations: {
+//         photos: true
+//       }
+//     })
 
-  const token = sign({}, secretToken, {
-    subject: `${user.id}`,
-    expiresIn: expiresInToken
-  })
+//     const photosToAdd = requestPhotos.map((photo) => {
+//       const photoCreated = photosRepository.create({
+//         name: photo.name,
+//         description: photo.description,
+//         filename: photo.filename,
+//         views: photo.views,
+//         isPublished: photo.isPublished,
+//         user
+//       })
 
-  const tokenReturn = {
-    token,
-    user: {
-      email: user.email,
-      name: user.firstName
-    }
-  }
+//       photosRepository.save(photoCreated)
 
-  res.send(tokenReturn)
-})
+//       return photoCreated
+//     })
 
-usersRoutes.post(
-  '/add-photo',
-  ensureAuthenticated,
-  async function (req: IGetUserAuthInfoRequest, res: Response) {
-    const userId = parseInt(req.user.id)
-    const requestPhotos: Photo[] = req.body.photos
+//     if (user.photos) {
+//       user.photos = [...user.photos, ...photosToAdd]
+//     } else {
+//       user.photos = photosToAdd
+//     }
 
-    const user = await usersRepository.findOne({
-      where: {
-        id: userId
-      },
-      relations: {
-        photos: true
-      }
-    })
+//     usersRepository.save(user)
 
-    const photosToAdd = requestPhotos.map((photo) => {
-      const photoCreated = photosRepository.create({
-        name: photo.name,
-        description: photo.description,
-        filename: photo.filename,
-        views: photo.views,
-        isPublished: photo.isPublished,
-        user
-      })
+//     res.send()
+//   }
+// )
 
-      photosRepository.save(photoCreated)
+// usersRoutes.delete(
+//   '/delete-photo',
+//   ensureAuthenticated,
+//   async function (req: IGetUserAuthInfoRequest, res: Response) {
+//     const userId = parseInt(req.user.id)
+//     const requestPhotosIdsToRemove: number[] = req.body.photosIdsToRemove
 
-      return photoCreated
-    })
+//     const photosToRemove = await photosRepository.find({
+//       where: {
+//         id: In(requestPhotosIdsToRemove)
+//       },
+//       relations: {
+//         user: true
+//       }
+//     })
 
-    if (user.photos) {
-      user.photos = [...user.photos, ...photosToAdd]
-    } else {
-      user.photos = photosToAdd
-    }
+//     if (!photosToRemove) {
+//       throw new AppError('Photos not found')
+//     }
 
-    usersRepository.save(user)
+//     if (photosToRemove.some((photo) => photo.user.id !== userId)) {
+//       throw new AppError('You cannot delete another users photo')
+//     }
 
-    res.send()
-  }
-)
+//     await photosRepository.remove(photosToRemove)
 
-usersRoutes.delete(
-  '/delete-photo',
-  ensureAuthenticated,
-  async function (req: IGetUserAuthInfoRequest, res: Response) {
-    const userId = parseInt(req.user.id)
-    const requestPhotosIdsToRemove: number[] = req.body.photosIdsToRemove
-
-    const photosToRemove = await photosRepository.find({
-      where: {
-        id: In(requestPhotosIdsToRemove)
-      },
-      relations: {
-        user: true
-      }
-    })
-
-    if (!photosToRemove) {
-      throw new AppError('Photos not found')
-    }
-
-    if (photosToRemove.some((photo) => photo.user.id !== userId)) {
-      throw new AppError('You cannot delete another users photo')
-    }
-
-    await photosRepository.remove(photosToRemove)
-
-    res.send()
-  }
-)
+//     res.send()
+//   }
+// )
 
 export { usersRoutes }

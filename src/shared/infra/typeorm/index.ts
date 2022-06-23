@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm'
-import { Photo } from '@modules/user/entity/Photo'
-import { User } from '@modules/user/entity/User'
+import { Photo } from '@modules/user/infra/typeorm/entities/Photo'
+import { User } from '@modules/user/infra/typeorm/entities/User'
 
 export const AppDataSource = new DataSource({
   type: 'mysql',

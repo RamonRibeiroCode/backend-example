@@ -1,0 +1,53 @@
+import { inject, injectable } from 'tsyringe'
+
+import { User } from '@modules/user/infra/typeorm/entities/User'
+import { IUsersRepository } from '@modules/user/repositories/IUsersRepository'
+import { AppError } from '@shared/errors/AppError'
+
+interface IRequest {
+  email: string
+  firstName: string
+  lastName: string
+  password: string
+  age: number
+}
+
+@injectable()
+class CreateUserUseCase {
+  userRepository: IUsersRepository
+
+  constructor (
+    @inject('UsersRepository')
+      userRepository: IUsersRepository
+  ) {
+    this.userRepository = userRepository
+  }
+
+  async execute ({
+    email,
+    firstName,
+    lastName,
+    password,
+    age
+  }: IRequest): Promise<User> {
+    const userAlreadyExists = await this.userRepository.findByEmail(
+      email
+    )
+
+    if (userAlreadyExists) {
+      throw new AppError('User already exists!')
+    }
+
+    const user = await this.userRepository.create({
+      email,
+      firstName,
+      lastName,
+      password,
+      age
+    })
+
+    return user
+  }
+}
+
+export { CreateUserUseCase }

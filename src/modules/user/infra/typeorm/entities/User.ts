@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm'
-import { Photo } from '@modules/user/entity/Photo'
+import { Photo } from '@modules/user/infra/typeorm/entities/Photo'
 
 @Entity({ name: 'users' })
 export class User {

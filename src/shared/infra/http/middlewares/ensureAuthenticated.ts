@@ -1,12 +1,17 @@
-import { NextFunction, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { verify } from 'jsonwebtoken'
-import { IGetUserAuthInfoRequest } from '@shared/infra/http/routes/users.routes'
 
 import auth from '../../../../config/auth'
 import { AppError } from '../../../errors/AppError'
 
 interface IPayload {
   sub: string;
+}
+
+interface IGetUserAuthInfoRequest extends Request {
+  user: {
+    id: string;
+  };
 }
 
 export async function ensureAuthenticated (
