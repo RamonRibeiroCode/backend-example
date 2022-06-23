@@ -14,7 +14,7 @@ interface IRequest {
 
 @injectable()
 class CreateUserUseCase {
-  userRepository: IUsersRepository
+  private userRepository: IUsersRepository
 
   constructor (
     @inject('UsersRepository')
