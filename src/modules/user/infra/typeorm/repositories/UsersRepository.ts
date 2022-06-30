@@ -26,12 +26,25 @@ class UsersRepository implements IUsersRepository {
   }
 
   async findByEmail (email: string) {
-    const user = this.repository.findOneBy({
-      email
-
+    return this.repository.findOne({
+      where: {
+        email
+      },
+      relations: ['photos']
     })
+  }
 
-    return user
+  async findById (id: number) {
+    return this.repository.findOne({
+      where: {
+        id
+      },
+      relations: ['photos']
+    })
+  }
+
+  async save (user: User) {
+    return this.repository.save(user)
   }
 }
 

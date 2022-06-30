@@ -8,7 +8,7 @@ interface IPayload {
   sub: string;
 }
 
-interface IGetUserAuthInfoRequest extends Request {
+export interface IGetUserAuthInfoRequest extends Request {
   user: {
     id: string;
   };

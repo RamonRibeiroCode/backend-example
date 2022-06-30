@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
 import cors from 'cors'
 
+import uploadConfig from '@config/upload'
 import { AppError } from '@shared/errors/AppError'
 
 import { router } from './routes'
@@ -10,6 +11,8 @@ app.use(express.json())
 
 app.use(cors())
 app.use(router)
+
+app.use('/avatar', express.static(`${uploadConfig.tmpFolder}/avatar`))
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {
