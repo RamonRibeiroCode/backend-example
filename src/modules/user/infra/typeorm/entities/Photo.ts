@@ -6,22 +6,8 @@ export class Photo {
   @PrimaryGeneratedColumn()
     id: number
 
-  @Column({
-    length: 100
-  })
-    name: string
-
-  @Column('text')
-    description: string
-
   @Column()
     filename: string
-
-  @Column('double')
-    views: number
-
-  @Column({ name: 'is_published' })
-    isPublished: boolean
 
   @ManyToOne(() => User, (user) => user.photos)
     user: User

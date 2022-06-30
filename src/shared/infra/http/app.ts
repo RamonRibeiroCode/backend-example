@@ -12,7 +12,7 @@ app.use(express.json())
 app.use(cors())
 app.use(router)
 
-app.use('/avatar', express.static(`${uploadConfig.tmpFolder}/avatar`))
+app.use('/photos', express.static(`${uploadConfig.tmpFolder}/photos`))
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {

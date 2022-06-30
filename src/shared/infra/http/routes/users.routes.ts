@@ -9,7 +9,7 @@ import { ensureAuthenticated } from '@shared/infra/http/middlewares/ensureAuthen
 
 import uploadConfig from '@config/upload'
 
-const uploadAvatar = multer(uploadConfig)
+const uploadPhotos = multer(uploadConfig)
 
 const usersRoutes = Router()
 
@@ -22,7 +22,7 @@ usersRoutes.post('/create', createUserController.handle)
 usersRoutes.patch(
   '/photos',
   ensureAuthenticated,
-  uploadAvatar.single('photos'),
+  uploadPhotos.array('photos'),
   updateUserPhotosController.handle
 )
 
