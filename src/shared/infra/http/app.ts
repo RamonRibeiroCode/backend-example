@@ -1,16 +1,22 @@
 import express, { NextFunction, Request, Response } from 'express'
+import swaggerUI from 'swagger-ui-express'
+
 import cors from 'cors'
 
 import uploadConfig from '@config/upload'
+
 import { AppError } from '@shared/errors/AppError'
 
 import { router } from './routes'
+import swaggerFile from '../../../swagger.json'
 
 const app = express()
 app.use(express.json())
 
 app.use(cors())
 app.use(router)
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerFile))
 
 app.use('/photos', express.static(`${uploadConfig.tmpFolder}/photos`))
 

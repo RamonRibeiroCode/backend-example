@@ -1,0 +1,58 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Backend Example Documentation",
+        "description": "This is an Example api",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/users/create": {
+            "post": {
+                "tags": ["User"],
+                "summary": "Create a user",
+                "description": "Create a new user",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "firstName": {
+                                        "type": "string"
+                                    },
+                                    "lastName": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "age": {
+                                        "type": "number"
+                                    }
+                                },
+                                "example": {
+                                    "email": "ramon@gmail.com",
+                                    "firstName": "Ramon",
+                                    "lastName": "Ribeiro",
+                                    "password": "321",
+                                    "age": 22
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User Created!"
+                    },
+                    "400": {
+                        "description": "User already exists!"
+                    }
+                }
+            }
+        }
+    }
+}
