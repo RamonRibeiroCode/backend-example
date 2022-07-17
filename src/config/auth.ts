@@ -3,5 +3,5 @@ export default {
   expiresInToken: '15m',
   secretRefreshToken: '125c41faf66e2c351bff02def3b22cab',
   expiresInRefreshToken: '30d',
-  expiresRefreshTokenDays: 30
+  expiresRefreshTokenDays: 30,
 }

@@ -3,19 +3,19 @@ import { IUserResponseDTO } from '../dtos/IUserResponseDTO'
 import { User } from '../infra/typeorm/entities/User'
 
 class UserMap {
-  static toDTO ({
+  static toDTO({
     email,
     firstName,
     lastName,
     age,
-    photos
+    photos,
   }: User): IUserResponseDTO {
     const user = classToClass({
       email,
       firstName,
       lastName,
       age,
-      photos
+      photos,
     })
 
     return user

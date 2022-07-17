@@ -4,36 +4,36 @@ import {
   Column,
   OneToMany,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from 'typeorm'
 import { Photo } from '@modules/user/infra/typeorm/entities/Photo'
 
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn()
-    id: number
+  id: number
 
   @Column()
-    email: string
+  email: string
 
   @Column({ name: 'first_name' })
-    firstName: string
+  firstName: string
 
   @Column({ name: 'last_name' })
-    lastName: string
+  lastName: string
 
   @Column()
-    password: string
+  password: string
 
   @Column()
-    age: number
+  age: number
 
   @OneToMany(() => Photo, (photo) => photo.user, { onDelete: 'CASCADE' })
-    photos: Photo[]
+  photos: Photo[]
 
   @CreateDateColumn({ name: 'created_at', type: 'datetime', nullable: false })
-    createdAt: Date
+  createdAt: Date
 
   @UpdateDateColumn({ name: 'updated_at', type: 'datetime', nullable: false })
-    updatedAt: Date
+  updatedAt: Date
 }

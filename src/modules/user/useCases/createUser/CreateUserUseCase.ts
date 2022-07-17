@@ -17,23 +17,21 @@ interface IRequest {
 class CreateUserUseCase {
   private userRepository: IUsersRepository
 
-  constructor (
+  constructor(
     @inject('UsersRepository')
-      userRepository: IUsersRepository
+    userRepository: IUsersRepository
   ) {
     this.userRepository = userRepository
   }
 
-  async execute ({
+  async execute({
     email,
     firstName,
     lastName,
     password,
-    age
+    age,
   }: IRequest): Promise<User> {
-    const userAlreadyExists = await this.userRepository.findByEmail(
-      email
-    )
+    const userAlreadyExists = await this.userRepository.findByEmail(email)
 
     if (userAlreadyExists) {
       throw new AppError('User already exists!')
@@ -46,7 +44,7 @@ class CreateUserUseCase {
       firstName,
       lastName,
       password: passwordHash,
-      age
+      age,
     })
 
     return user

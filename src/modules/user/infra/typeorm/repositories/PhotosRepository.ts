@@ -9,11 +9,11 @@ import { AppDataSource } from '@shared/infra/typeorm'
 class PhotosRepository implements IPhotosRepository {
   private repository: Repository<Photo>
 
-  constructor () {
+  constructor() {
     this.repository = AppDataSource.getRepository(Photo)
   }
 
-  async create (photos: ICreatePhotoDTO[]) {
+  async create(photos: ICreatePhotoDTO[]) {
     const newPhotos = this.repository.create(photos)
 
     return this.repository.save(newPhotos)
