@@ -4,11 +4,11 @@ import { User } from '@modules/user/infra/typeorm/entities/User'
 @Entity({ name: 'photos' })
 export class Photo {
   @PrimaryGeneratedColumn()
-    id: number
+  id: number
 
   @Column()
-    filename: string
+  filename: string
 
   @ManyToOne(() => User, (user) => user.photos)
-    user: User
+  user: User
 }

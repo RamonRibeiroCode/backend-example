@@ -6,15 +6,21 @@ import { IGetUserAuthInfoRequest } from '@shared/infra/http/middlewares/ensureAu
 import { UpdateUserPhotosUseCase } from './UpdateUserPhotosUseCase'
 
 class UpdateUserPhotosController {
-  async handle (request: IGetUserAuthInfoRequest, response: Response): Promise<Response> {
+  async handle(
+    request: IGetUserAuthInfoRequest,
+    response: Response
+  ): Promise<Response> {
     const files = request.files as Express.Multer.File[]
-    const photosFileName = files.map(file => file.filename)
+    const photosFileName = files.map((file) => file.filename)
 
     const updateUserImagesUseCase = container.resolve(UpdateUserPhotosUseCase)
 
     const userId = request.user.id
 
-    const user = await updateUserImagesUseCase.execute({ photosFileName, userId })
+    const user = await updateUserImagesUseCase.execute({
+      photosFileName,
+      userId,
+    })
 
     return response.status(201).json(user)
   }

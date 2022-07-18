@@ -7,14 +7,14 @@ import { IUsersRepository } from '@modules/user/repositories/IUsersRepository'
 @injectable()
 class ProfileUserUseCase {
   private usersRepository: IUsersRepository
-  constructor (
+  constructor(
     @inject('UsersRepository')
-      usersRepository: IUsersRepository
+    usersRepository: IUsersRepository
   ) {
     this.usersRepository = usersRepository
   }
 
-  async execute (id: string): Promise<IUserResponseDTO> {
+  async execute(id: string): Promise<IUserResponseDTO> {
     const user = await this.usersRepository.findById(parseInt(id))
 
     return UserMap.toDTO(user)

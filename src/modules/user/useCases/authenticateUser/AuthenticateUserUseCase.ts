@@ -7,33 +7,33 @@ import { AppError } from "@shared/errors/AppError";
 import auth from "@config/auth";
 
 interface IRequest {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 interface IResponse {
   user: {
-    name: string;
-    email: string;
-  };
-  token: string;
+    name: string
+    email: string
+  }
+  token: string
 }
 
 @injectable()
 class AuthenticateUserUseCase {
-  private usersRepository: IUsersRepository;
+  private usersRepository: IUsersRepository
 
   constructor(
-    @inject("UsersRepository")
+    @inject('UsersRepository')
     usersRepository: IUsersRepository
   ) {
     this.usersRepository = usersRepository;
   }
 
   async execute({ email, password }: IRequest): Promise<IResponse> {
-    const user = await this.usersRepository.findByEmail(email);
+    const user = await this.usersRepository.findByEmail(email)
 
-    const { expiresInToken, secretToken } = auth;
+    const { expiresInToken, secretToken } = auth
 
     if (!user) {
       throw new AppError("Email or password incorrect!");
@@ -48,15 +48,15 @@ class AuthenticateUserUseCase {
     const token = sign({}, secretToken, {
       subject: `${user.id}`,
       expiresIn: expiresInToken,
-    });
+    })
 
     const tokenReturn: IResponse = {
       token,
       user: {
-        name: user.firstName + " " + user.lastName,
+        name: user.firstName + ' ' + user.lastName,
         email: user.email,
       },
-    };
+    }
 
     return tokenReturn;
   }

@@ -9,41 +9,41 @@ import { AppDataSource } from '@shared/infra/typeorm'
 class UsersRepository implements IUsersRepository {
   private repository: Repository<User>
 
-  constructor () {
+  constructor() {
     this.repository = AppDataSource.getRepository(User)
   }
 
-  async create ({ email, firstName, lastName, password, age }: ICreateUserDTO) {
+  async create({ email, firstName, lastName, password, age }: ICreateUserDTO) {
     const newUser = this.repository.create({
       email,
       firstName,
       lastName,
       password,
-      age
+      age,
     })
 
     return this.repository.save(newUser)
   }
 
-  async findByEmail (email: string) {
+  async findByEmail(email: string) {
     return this.repository.findOne({
       where: {
-        email
+        email,
       },
-      relations: ['photos']
+      relations: ['photos'],
     })
   }
 
-  async findById (id: number) {
+  async findById(id: number) {
     return this.repository.findOne({
       where: {
-        id
+        id,
       },
-      relations: ['photos']
+      relations: ['photos'],
     })
   }
 
-  async save (user: User) {
+  async save(user: User) {
     return this.repository.save(user)
   }
 }

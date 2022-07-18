@@ -6,7 +6,7 @@ import upload from '@config/upload'
 import { IStorageProvider } from '../IStorageProvider'
 
 class LocalStorageProvider implements IStorageProvider {
-  async save (file: string, folder: string): Promise<string> {
+  async save(file: string, folder: string): Promise<string> {
     await fs.promises.rename(
       resolve(upload.tmpFolder, file),
       resolve(`${upload.tmpFolder}/${folder}`, file)
@@ -15,13 +15,13 @@ class LocalStorageProvider implements IStorageProvider {
     return file
   }
 
-  async saveAll (files: string[], folder: string) {
-    files.forEach(file => this.save(file, folder))
+  async saveAll(files: string[], folder: string) {
+    files.forEach((file) => this.save(file, folder))
 
     return files
   }
 
-  async delete (file: string, folder: string): Promise<void> {
+  async delete(file: string, folder: string): Promise<void> {
     const filename = resolve(`${upload.tmpFolder}/${folder}`, file)
 
     try {
@@ -32,8 +32,8 @@ class LocalStorageProvider implements IStorageProvider {
     await fs.promises.unlink(filename)
   }
 
-  async deleteAll (files: string[], folder: string): Promise<void> {
-    files.forEach(file => this.delete(file, folder))
+  async deleteAll(files: string[], folder: string): Promise<void> {
+    files.forEach((file) => this.delete(file, folder))
   }
 }
 

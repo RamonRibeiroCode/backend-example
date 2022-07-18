@@ -16,10 +16,12 @@ describe('Create User', () => {
       firstName: 'First Name',
       lastName: 'Last Name',
       age: 20,
-      password: '123456'
+      password: '123456',
     })
 
-    const userInMemory = await usersRepositoryInMemory.findByEmail(newUser.email)
+    const userInMemory = await usersRepositoryInMemory.findByEmail(
+      newUser.email
+    )
 
     expect(userInMemory).toHaveProperty('id')
   })

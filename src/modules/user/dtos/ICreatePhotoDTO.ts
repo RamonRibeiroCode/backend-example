@@ -1,5 +1,5 @@
 interface ICreatePhotoDTO {
-    filename: string
+  filename: string
 }
 
 export { ICreatePhotoDTO }

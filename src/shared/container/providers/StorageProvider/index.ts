@@ -4,7 +4,7 @@ import { LocalStorageProvider } from './implemetations/LocalStorageProvider'
 import { IStorageProvider } from './IStorageProvider'
 
 const diskStorage = {
-  local: LocalStorageProvider
+  local: LocalStorageProvider,
 }
 
 container.registerSingleton<IStorageProvider>(

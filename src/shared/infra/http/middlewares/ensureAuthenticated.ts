@@ -5,16 +5,16 @@ import auth from '../../../../config/auth'
 import { AppError } from '../../../errors/AppError'
 
 interface IPayload {
-  sub: string;
+  sub: string
 }
 
 export interface IGetUserAuthInfoRequest extends Request {
   user: {
-    id: string;
-  };
+    id: string
+  }
 }
 
-export async function ensureAuthenticated (
+export async function ensureAuthenticated(
   request: IGetUserAuthInfoRequest,
   response: Response,
   next: NextFunction
@@ -31,7 +31,7 @@ export async function ensureAuthenticated (
     const { sub: userId } = verify(token, auth.secretToken) as IPayload
 
     request.user = {
-      id: userId
+      id: userId,
     }
 
     next()

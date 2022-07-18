@@ -6,7 +6,10 @@ import { ProfileUserUseCase } from './ProfileUserUseCase'
 import { IGetUserAuthInfoRequest } from '@shared/infra/http/middlewares/ensureAuthenticated'
 
 class ProfileUserController {
-  async handle (request: IGetUserAuthInfoRequest, response: Response): Promise<Response> {
+  async handle(
+    request: IGetUserAuthInfoRequest,
+    response: Response
+  ): Promise<Response> {
     const { id } = request.user
     const profileUserUseCase = container.resolve(ProfileUserUseCase)
 

@@ -17,32 +17,30 @@ class UpdateUserPhotosUseCase {
   private photosRepository: IPhotosRepository
   private storageProvider: IStorageProvider
 
-  constructor (
+  constructor(
     @inject('UsersRepository')
-      userRepository: IUsersRepository,
+    userRepository: IUsersRepository,
     @inject('PhotosRepository')
-      photosRepository: IPhotosRepository,
+    photosRepository: IPhotosRepository,
     @inject('StorageProvider')
-      storageProvider: IStorageProvider
+    storageProvider: IStorageProvider
   ) {
     this.userRepository = userRepository
     this.photosRepository = photosRepository
     this.storageProvider = storageProvider
   }
 
-  async execute ({ userId, photosFileName }: IRequest) {
+  async execute({ userId, photosFileName }: IRequest) {
     const user = await this.userRepository.findById(parseInt(userId))
 
-    const formattedPhotos = photosFileName.map(photoFileName => ({
-      filename: photoFileName
+    const formattedPhotos = photosFileName.map((photoFileName) => ({
+      filename: photoFileName,
     }))
 
-    const newPhotos = await this.photosRepository.create(
-      formattedPhotos
-    )
+    const newPhotos = await this.photosRepository.create(formattedPhotos)
 
     if (user.photos.length) {
-      const photosFileName = user.photos.map(photo => photo.filename)
+      const photosFileName = user.photos.map((photo) => photo.filename)
       await this.storageProvider.deleteAll(photosFileName, 'photos')
     }
 
