@@ -1,8 +1,9 @@
 import { inject, injectable } from 'tsyringe'
 
 import { IUserResponseDTO } from '@modules/user/dtos/IUserResponseDTO'
-import { UserMap } from '@modules/user/mapper/UserMap'
 import { IUsersRepository } from '@modules/user/repositories/IUsersRepository'
+import {} from 'class-transformer'
+import { User } from '@modules/user/infra/typeorm/entities/User'
 
 @injectable()
 class ProfileUserUseCase {
@@ -14,10 +15,22 @@ class ProfileUserUseCase {
     this.usersRepository = usersRepository
   }
 
+  private withoutSensitiveData(user: User) {
+    const excludeKeys = ['password', 'id']
+
+    return Object.fromEntries(
+      Object.entries(user).filter(([key]) => !excludeKeys.includes(key))
+    )
+  }
+
   async execute(id: string): Promise<IUserResponseDTO> {
     const user = await this.usersRepository.findById(parseInt(id))
 
-    return UserMap.toDTO(user)
+    const userWithoutPassword = this.withoutSensitiveData(
+      user
+    ) as IUserResponseDTO
+
+    return userWithoutPassword
   }
 }
 
