@@ -1,13 +1,11 @@
 import { Router } from 'express'
 import multer from 'multer'
 
-import { CreateUserController } from '@modules/user/useCases/createUser/CreateUserController'
-import { UpdateUserPhotosController } from '@modules/user/useCases/updateUserImages/UpdateUserPhotosController'
-import { ProfileUserController } from '@modules/user/useCases/profileUser/ProfileUserController'
-
-import { ensureAuthenticated } from '@shared/infra/http/middlewares/ensureAuthenticated'
-
 import uploadConfig from '@config/upload'
+import { CreateUserController } from '@modules/user/useCases/createUser/CreateUserController'
+import { ProfileUserController } from '@modules/user/useCases/profileUser/ProfileUserController'
+import { UpdateUserPhotosController } from '@modules/user/useCases/updateUserImages/UpdateUserPhotosController'
+import { ensureAuthenticated } from '@shared/infra/http/middlewares/ensureAuthenticated'
 
 const uploadPhotos = multer(uploadConfig)
 

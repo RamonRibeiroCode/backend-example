@@ -1,9 +1,9 @@
 import { Response } from 'express'
 import { container } from 'tsyringe'
 
-import { ProfileUserUseCase } from './ProfileUserUseCase'
-
 import { IGetUserAuthInfoRequest } from '@shared/infra/http/middlewares/ensureAuthenticated'
+
+import { ProfileUserUseCase } from './ProfileUserUseCase'
 
 class ProfileUserController {
   async handle(

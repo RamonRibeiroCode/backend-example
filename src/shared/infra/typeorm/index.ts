@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm'
+
 import { Photo } from '@modules/user/infra/typeorm/entities/Photo'
 import { User } from '@modules/user/infra/typeorm/entities/User'
 

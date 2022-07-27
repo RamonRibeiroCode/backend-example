@@ -1,14 +1,12 @@
+import cors from 'cors'
 import express, { NextFunction, Request, Response } from 'express'
 import swaggerUI from 'swagger-ui-express'
 
-import cors from 'cors'
-
 import uploadConfig from '@config/upload'
-
 import { AppError } from '@shared/errors/AppError'
 
-import { router } from './routes'
 import swaggerFile from '../../../swagger.json'
+import { router } from './routes'
 
 const app = express()
 app.use(express.json())

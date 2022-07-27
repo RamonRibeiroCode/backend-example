@@ -1,9 +1,8 @@
 import { Repository } from 'typeorm'
 
-import { IPhotosRepository } from '@modules/user/repositories/IPhotosRepository'
-import { Photo } from '@modules/user/infra/typeorm/entities/Photo'
 import { ICreatePhotoDTO } from '@modules/user/dtos/ICreatePhotoDTO'
-
+import { Photo } from '@modules/user/infra/typeorm/entities/Photo'
+import { IPhotosRepository } from '@modules/user/repositories/IPhotosRepository'
 import { AppDataSource } from '@shared/infra/typeorm'
 
 class PhotosRepository implements IPhotosRepository {

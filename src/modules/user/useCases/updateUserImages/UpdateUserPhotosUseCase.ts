@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe'
 
+import { IPhotosRepository } from '@modules/user/repositories/IPhotosRepository'
 import { IUsersRepository } from '@modules/user/repositories/IUsersRepository'
 // import { ICreatePhotoDTO } from '@modules/user/dtos/ICreatePhotoDTO'
-import { IPhotosRepository } from '@modules/user/repositories/IPhotosRepository'
 import { IStorageProvider } from '@shared/container/providers/StorageProvider/IStorageProvider'
 
 interface IRequest {

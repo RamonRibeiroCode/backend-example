@@ -1,24 +1,47 @@
 {
   "env": {
-    "es2021": true,
+    "es2020": true,
     "node": true,
     "jest": true
   },
-  "extends": ["standard","prettier"],
+  "extends": [
+    "standard",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "plugin:prettier/recommended"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint"],
+  "root": true,
+  "plugins": ["@typescript-eslint", "prettier", "eslint-plugin-import-helpers"],
   "rules": {
-    "@typescript-eslint/no-use-before-define": [
+    "prettier/prettier": "error",
+    "@typescript-eslint/naming-convention": [
       "error",
       {
-        "classes": true,
-        "functions": false,
-        "typedefs": false
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "custom": {
+          "regex": "^I[A-Z]",
+          "match": true
+        }
+      }
+    ],
+    "import-helpers/order-imports": [
+      "warn",
+      {
+        "newlinesBetween": "always",
+        "groups": ["module", "/^@/", ["parent", "sibling", "index"]],
+        "alphabetize": { "order": "asc", "ignoreCase": true }
       }
     ]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }

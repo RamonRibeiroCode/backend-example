@@ -2,11 +2,10 @@ import { container } from 'tsyringe'
 
 import '@shared/container/providers'
 
-import { UsersRepository } from '@modules/user/infra/typeorm/repositories/UsersRepository'
-import { IUsersRepository } from '@modules/user/repositories/IUsersRepository'
-
 import { PhotosRepository } from '@modules/user/infra/typeorm/repositories/PhotosRepository'
+import { UsersRepository } from '@modules/user/infra/typeorm/repositories/UsersRepository'
 import { IPhotosRepository } from '@modules/user/repositories/IPhotosRepository'
+import { IUsersRepository } from '@modules/user/repositories/IUsersRepository'
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',

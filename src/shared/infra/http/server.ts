@@ -4,8 +4,8 @@ import 'dotenv/config'
 import 'express-async-errors'
 import '@shared/container'
 
-import { AppDataSource } from '@shared/infra/typeorm'
 import { app } from '@shared/infra/http/app'
+import { AppDataSource } from '@shared/infra/typeorm'
 
 AppDataSource.initialize()
   .then(() => {
